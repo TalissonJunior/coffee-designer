@@ -6,4 +6,11 @@ export class ClassTablePropertyType {
     this.value = value;
     this.isClass = isClass;
   }
+
+  toJson() {
+    return {
+      value: this.value,
+      isClass: this.isClass
+    };
+  }
 }

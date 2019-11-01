@@ -3,9 +3,9 @@ import 'd3-selection-multi';
 import { WorkSpace } from './workspace/workspace';
 import { Minimap } from './minimap/minimap';
 import { ClassTable } from '../models/class-table/class-table';
-import { ClassTableProperty } from '../models/class-table/class-table-property';
-import { ClassTablePosition } from '../models/class-table/class-table-position';
-import { ClassTablePropertyType } from '../models/class-table/class-table-property-type';
+import { JSONData, JSONInput } from '../models/json';
+import { Utils } from './utils';
+import { JSONOutput } from '../models/json/json-output';
 
 class App {
   height = 2400;
@@ -28,28 +28,35 @@ class App {
       width: this.width / 16,
       scale: 16
     });
+  }
 
-    this.workspace.addClassTable(
-      new ClassTable(
-        null,
-        'Address',
-        't_address',
-        [
-          new ClassTableProperty(
-            null,
-            'Id',
-            'id',
-            'Identifier',
-            new ClassTablePropertyType('Guid', false),
-            false,
-            true,
-            true,
-            true
-          )
-        ],
-        new ClassTablePosition(50, 50)
-      )
-    );
+  public fromJson(json: JSONInput): void {
+    if (!json.data) {
+      throw 'Json must have a data property, ex. data: { classTables:[] }';
+    } else if (!Utils.isArray(json.data.classTables)) {
+      throw "Json property 'data.classTables' must be of type array, ex. data: { classTables:[] }";
+    }
+
+    json = new JSONInput(json.data.classTables);
+
+    if (json.data.classTables && json.data.classTables.length > 0) {
+      for (let index = 0; index < json.data.classTables.length; index++) {
+        const classTable = json.data.classTables[index];
+        this.workspace.addClassTable(classTable);
+      }
+    }
+  }
+
+  public toJson(): JSONOutput {
+    if (!this.workspace.creators) {
+      return new JSONOutput([]);
+    }
+
+    const classTables = this.workspace.creators.map(creator => {
+      return creator.classTable.toJson();
+    });
+
+    return new JSONOutput(classTables as any);
   }
 }
 

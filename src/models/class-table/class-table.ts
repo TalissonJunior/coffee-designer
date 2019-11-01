@@ -36,13 +36,13 @@ export class ClassTable {
     position: ClassTablePosition
   ) {
     this._key = key || Utils.generateID();
-    this._name = name || '';
-    this._tableName = tableName || '';
+    this._name = Utils.capitalize(name) || '';
+    this._tableName = Utils.convertToUnderscore(tableName) || '';
     this._properties = properties || new Array<ClassTableProperty>();
     this._position = position || new ClassTablePosition(0, 0);
   }
 
-  public changeName(name: string): void {
+  changeName(name: string): void {
     if (!name) {
       throw Error('Property class name can´t be null.');
     }
@@ -50,7 +50,7 @@ export class ClassTable {
     this._name = Utils.capitalize(name);
   }
 
-  public changeTableName(tableName: string): void {
+  changeTableName(tableName: string): void {
     if (!tableName) {
       throw Error('Property Table Name can´t be null.');
     }
@@ -58,7 +58,7 @@ export class ClassTable {
     this._tableName = Utils.convertToUnderscore(tableName);
   }
 
-  public changePosition(position: ClassTablePosition): void {
+  changePosition(position: ClassTablePosition): void {
     if (!position) {
       throw Error('Property position can´t be null.');
     }
@@ -66,7 +66,7 @@ export class ClassTable {
     this._position = position;
   }
 
-  public addProperty(property: ClassTableProperty): void {
+  addProperty(property: ClassTableProperty): void {
     if (!property) {
       throw Error('Class Property can´t be null.');
     }
@@ -74,7 +74,7 @@ export class ClassTable {
     this._properties.push(property);
   }
 
-  public removeProperty(propertyKey: string): void {
+  removeProperty(propertyKey: string): void {
     if (!propertyKey) {
       throw Error('Property Key can´t be null.');
     }
@@ -88,11 +88,21 @@ export class ClassTable {
     }
   }
 
-  public getClassTableName(): string {
+  getClassTableName(): string {
     if (!this.name && !this.tableName) {
       return 'className / tableName';
     }
 
     return this.name + ' / ' + this.tableName;
+  }
+
+  toJson() {
+    return {
+      key: this._key,
+      name: this._name,
+      tableName: this._tableName,
+      properties: this._properties.map(property => property.toJson()),
+      position: this._position.toJson()
+    };
   }
 }

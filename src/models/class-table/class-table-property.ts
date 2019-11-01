@@ -59,8 +59,8 @@ export class ClassTableProperty {
     hasChangeMethod: boolean
   ) {
     this._key = key || Utils.generateID();
-    this._name = name || '';
-    this._columnName = columnName || '';
+    this._name = Utils.capitalize(name) || '';
+    this._columnName = Utils.toLowerCase(columnName) || '';
     this._description = description || '';
     this._isForeignKey = isForeignKey;
     this._isPrimaryKey = isPrimaryKey;
@@ -112,5 +112,19 @@ export class ClassTableProperty {
     }
 
     this._type = new ClassTablePropertyType(type.value, type.isClass);
+  }
+
+  toJson() {
+    return {
+      key: this._key,
+      name: this._name,
+      columnName: this._columnName,
+      description: this._description,
+      type: this._type.toJson(),
+      isForeignKey: this._isForeignKey,
+      isPrimaryKey: this._isPrimaryKey,
+      isRequired: this._isRequired,
+      hasChangeMethod: this._hasChangeMethod
+    };
   }
 }

@@ -19,6 +19,10 @@ export class Utils {
   }
 
   static convertToUnderscore(str: string): string {
+    if (!str) {
+      return str;
+    }
+
     var filterUpperCase = str.replace(/([a-z])([A-Z])/g, '$1_$2').toLowerCase();
     var filterSpace = filterUpperCase.replace(/\s/g, '_').toLowerCase();
 
@@ -26,7 +30,19 @@ export class Utils {
   }
 
   static capitalize(s: string): string {
+    if (!s) {
+      return s;
+    }
+
     return s[0].toUpperCase() + s.slice(1);
+  }
+
+  static toLowerCase(s: string): string {
+    if (!s) {
+      return s;
+    }
+
+    return s.toLowerCase();
   }
 
   static convertToBoolean(value: any): boolean {

@@ -21,4 +21,11 @@ export class ClassTablePosition {
   changeY(y: number): void {
     this._y = y;
   }
+
+  toJson() {
+    return {
+      x: this._x,
+      y: this._y
+    };
+  }
 }

@@ -1,0 +1,22 @@
+export const CSharpTypes = [
+  'string',
+  'int',
+  'long',
+  'decimal',
+  'bool',
+  'byte',
+  'sbyte',
+  'byte[]',
+  'char',
+  'float',
+  'Guid',
+  'DateTime',
+  'List<string>',
+  'List<int>',
+  'List<long>',
+  'List<decimal>',
+  'List<guid>',
+  'List<bool>',
+  'List<float>',
+  'List<DateTime>'
+];

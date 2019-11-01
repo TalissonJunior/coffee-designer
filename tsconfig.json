@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "es2015",
+        "outDir": ".tmp",
+        "removeComments": true,
+        "sourceMap": true,
+        "lib": [
+            "dom",
+            "es2015"
+        ]
+    },
+    "exclude": [
+        "dist",
+        ".tmp"
+    ]
+}

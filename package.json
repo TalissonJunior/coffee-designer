@@ -1,0 +1,44 @@
+{
+  "name": "clidesigner",
+  "version": "1.0.0",
+  "description": "Cli Designer for cli",
+  "main": "webpack.config.js",
+  "scripts": {
+    "debug": "node --inspect-brk ./dist/CLIDesigner.min.js",
+    "serve": "node node_modules/webpack/bin/webpack.js --config buildtools/webpack.dev.js --watch",
+    "build": "node node_modules/webpack/bin/webpack.js --config buildtools/webpack.prod.js"
+  },
+  "author": "Talisson Junior",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.6.4",
+    "@types/d3": "^5.7.2",
+    "@types/d3-selection-multi": "^1.0.7",
+    "@types/d3-zoom": "^1.7.4",
+    "babel-loader": "^8.0.6",
+    "browser-sync": "^2.26.7",
+    "browser-sync-webpack-plugin": "^2.2.2",
+    "copy-webpack-plugin": "^5.0.4",
+    "css-loader": "^3.2.0",
+    "extract-loader": "^3.1.0",
+    "file-loader": "^4.2.0",
+    "node-sass": "^4.13.0",
+    "prettier": "^1.18.2",
+    "prettier-webpack-plugin": "^1.2.0",
+    "sass-loader": "^8.0.0",
+    "style-loader": "^1.0.0",
+    "ts-loader": "^6.2.1",
+    "tslint-webpack-plugin": "^2.1.0",
+    "typescript": "^3.6.4",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.9",
+    "webpack-dev-server": "^3.9.0",
+    "webpack-merge": "^4.2.2"
+  },
+  "dependencies": {
+    "d3": "^5.12.0",
+    "d3-drag": "^1.2.4",
+    "d3-selection-multi": "^1.0.1",
+    "d3-zoom": "^1.8.3"
+  }
+}

@@ -1,0 +1,201 @@
+.class-table {
+  position: absolute;
+  min-width: 250px;
+  font-family: 'source_sans_proregular', sans-serif;
+  font-size: 12px;
+  background-color: #eee;
+  min-width: 200px;
+  position: absolute;
+  border-top: 1px solid #bdbdbd;
+  border-left: 1px solid #bdbdbd;
+  border-right: 1px solid #bdbdbd;
+  border-collapse: separate;
+  border-spacing: 0;
+  -webkit-box-shadow: 1px 1px 3px 0px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 1px 1px 3px 0px rgba(0, 0, 0, 0.2);
+  box-shadow: 1px 1px 3px 0px rgba(0, 0, 0, 0.2);
+
+  .edit {
+    cursor: pointer;
+  }
+
+  .class-table-form {
+    background-color: $primary-light;
+    padding: 15px 8px;
+    .class-table-form-group {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3px 0px;
+
+      label {
+        display: inline-block;
+        text-align: right;
+        color: #333;
+        font-weight: 400;
+        vertical-align: middle;
+        white-space: normal;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        min-width: 150px;
+      }
+
+      input {
+        margin-left: 5px;
+        width: 100px;
+
+        &[type='checkbox'] {
+          width: auto;
+          margin-right: 92px;
+        }
+      }
+
+      select {
+        margin-left: 5px;
+        width: 104px;
+      }
+    }
+
+    .class-table-form-group-btn {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding-top: 12px;
+
+      .btn {
+        width: auto;
+        padding: 3px;
+        margin-right: 2px;
+        margin-left: 2px;
+        cursor: pointer;
+
+        &.btn-save {
+          color: #336699;
+        }
+      }
+    }
+  }
+
+  tr {
+    &.caption {
+      font-weight: bold;
+      text-align: left;
+      background-color: #ececec;
+      cursor: move;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      color: #333333;
+
+      &.open-form {
+        .class-table-name {
+          display: none;
+        }
+
+        .table-ops {
+          display: none;
+        }
+      }
+    }
+
+    th {
+      &.table-ops {
+        width: 36px;
+        text-align: right;
+      }
+    }
+  }
+
+  // Footer
+  tfoot {
+    td {
+      padding: 0px;
+      border-right-width: 0px;
+    }
+
+    tr {
+      &.editing {
+        td {
+          &:not(.property-form) {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+
+  // Header
+  thead {
+    th {
+      border-bottom: 1px solid #bdbdbd;
+      padding: 4px;
+    }
+  }
+
+  // body
+  tbody {
+    tr {
+      td {
+        min-width: 60px;
+        padding: 4px;
+
+        &:last-child {
+          border-right: 0px solid #bdbdbd;
+        }
+
+        .table-primary {
+          display: flex;
+          align-items: center;
+
+          span {
+            margin-right: 5px;
+          }
+        }
+      }
+
+      &.editing {
+        td {
+          &:not(.property-form) {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+
+  td {
+    border-bottom: 1px solid #bdbdbd;
+    border-right: 1px solid #bdbdbd;
+    background-color: #f8f8f8;
+    padding: 1px;
+    padding-left: 3px;
+    white-space: nowrap;
+    vertical-align: middle;
+
+    div {
+      &.operations {
+        .operations-action {
+          padding: 3px;
+          display: flex;
+          align-items: center;
+        }
+      }
+    }
+  }
+
+  span {
+    &.action {
+      color: #336699;
+      text-decoration: underline;
+      cursor: pointer;
+      margin-left: 5px;
+    }
+  }
+}

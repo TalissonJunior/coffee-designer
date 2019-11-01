@@ -1,0 +1,31 @@
+.minimap {
+  position: fixed;
+  background-color: $minimap-color;
+  border: 1px solid $border-color;
+
+  &.minimap-bottom-right {
+    bottom: 20px;
+    right: 20px;
+  }
+
+  &.minimap-bottom-left {
+    bottom: 20px;
+    left: 20px;
+  }
+
+  &.minimap-top-right {
+    top: 20px;
+    right: 20px;
+  }
+
+  &.minimap-top-left {
+    top: 20px;
+    left: 20px;
+  }
+
+  .minimap-viewport {
+    border: 1px solid #666;
+    fill: #f3f3f3;
+    position: absolute;
+  }
+}

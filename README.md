@@ -122,10 +122,10 @@ Usage:
     const coffeeDesigner = CoffeeDesigner.init('body');
 
     // Listen to one change at time
-    coffeeDesigner.on('value', (callbackParams) => {});
+    coffeeDesigner.on('change', (callbackParams) => {});
 
     // Listen to multiple changes at time
-    coffeeDesigner.on(['value', 'value'], (callbackParams) => {});
+    coffeeDesigner.on(['change:name', 'change:property'], (callbackParams) => {});
 </script>
 ```
 ### Development.

@@ -8,6 +8,7 @@ import { CSharpTypes } from '../../data/csharptypes';
 import { ClassTablePropertyType } from '../../models/class-table/class-table-property-type';
 import { Toast } from '../toast';
 import { ClassTablePosition } from '../../models/class-table/class-table-position';
+import { ContextMenu } from '../context-menu/context-menu';
 
 /**
  * Creates the class table element,
@@ -20,12 +21,39 @@ export class ClassTableCreator {
   containerElement: d3.Selection<d3.BaseType, unknown, HTMLElement, any>;
   otherClassTable: Array<ClassTable>;
 
+  // Listeners
+  private onPropertyChange: Function;
+  private onPositionChange: Function;
+  private onNameChange: Function;
+  private onDelete: Function;
+
   constructor(
     containerElement: d3.Selection<d3.BaseType, unknown, HTMLElement, any>,
     classTable: ClassTable,
     otherClassTables: Array<ClassTable>
   ) {
     this.init(containerElement, classTable, otherClassTables);
+  }
+
+  on(
+    type: 'property' | 'position' | 'name' | 'delete',
+    callback: () => void
+  ): void {
+    if (type == 'property') {
+      this.onPropertyChange = callback;
+    } else if (type == 'position') {
+      this.onPositionChange = callback;
+    } else if (type == 'name') {
+      this.onNameChange = callback;
+    } else if (type == 'delete') {
+      this.onDelete = callback;
+    }
+  }
+
+  delete(): void {
+    if (this.onDelete) {
+      this.onDelete();
+    }
   }
 
   update(): void {
@@ -193,6 +221,9 @@ export class ClassTableCreator {
                   form.remove();
                   headerTR.select('class-table-form').remove();
 
+                  if (self.onNameChange) {
+                    self.onNameChange();
+                  }
                   self.update();
                 } catch (error) {
                   new Toast().show(error.message);
@@ -499,6 +530,9 @@ export class ClassTableCreator {
           form.remove();
           (parentTr.node() as HTMLElement).classList.remove('editing');
 
+          if (this.onPropertyChange) {
+            this.onPropertyChange();
+          }
           this.update();
         } catch (error) {
           new Toast().show(error.message);
@@ -511,21 +545,35 @@ export class ClassTableCreator {
     element: d3.Selection<d3.BaseType, unknown, HTMLElement, any>
   ): void {
     let x, y;
+    let hasDrag = false;
     element = d3.select((element.node() as any).parentNode);
 
     const drag = d3
       .drag()
       .on('start', () => {
+        // Close context menu if it is open
+        new ContextMenu('close');
+
         x = parseInt(element.attr('x'));
         y = parseInt(element.attr('y'));
       })
       .on('drag', () => {
+        hasDrag = true;
         x += d3.event.dx;
         y += d3.event.dy;
+
+        // Close context menu if it is open
+        new ContextMenu('close');
 
         element.attr('x', x).attr('y', y);
 
         this.classTable.changePosition(new ClassTablePosition(x, y));
+      })
+      .on('end', () => {
+        if (this.onPositionChange && hasDrag) {
+          hasDrag = false;
+          this.onPositionChange();
+        }
       });
 
     element.call(drag);

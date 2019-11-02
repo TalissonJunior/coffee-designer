@@ -2,10 +2,12 @@ import * as d3 from 'd3';
 import 'd3-selection-multi';
 import { WorkSpace } from './workspace/workspace';
 import { Minimap } from './minimap/minimap';
-import { ClassTable } from '../models/class-table/class-table';
-import { JSONData, JSONInput } from '../models/json';
+import { JSONInput } from '../models/json';
 import { Utils } from './utils';
 import { JSONOutput } from '../models/json/json-output';
+import { ClassTable } from '../models/class-table/class-table';
+import { OnChangeType } from '../enums/on-change-type';
+import { ClassTableOnChange } from '../models/class-table/class-table-on-change';
 
 class App {
   height = 2400;
@@ -57,6 +59,17 @@ class App {
     });
 
     return new JSONOutput(classTables as any);
+  }
+
+  public on(
+    type: OnChangeType | Array<OnChangeType>,
+    changeCallback: () => ClassTable
+  ): void {
+    const callback = new ClassTableOnChange({
+      type: type,
+      callback: changeCallback
+    });
+    this.workspace.callbackChanges.push(callback);
   }
 }
 

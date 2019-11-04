@@ -1,4 +1,5 @@
 import { ClassTable } from '../class-table/class-table';
+import { ClassTablePosition } from '../class-table/class-table-position';
 
 export class JSONData {
   classTables: Array<ClassTable>;
@@ -13,6 +14,8 @@ export class JSONData {
               ct.tableName,
               ct.properties,
               ct.position
+                ? new ClassTablePosition(ct.position.x, ct.position.y)
+                : new ClassTablePosition(50, 50)
             )
         )
       : new Array<ClassTable>();

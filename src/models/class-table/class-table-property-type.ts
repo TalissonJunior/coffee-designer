@@ -3,7 +3,7 @@ export class ClassTablePropertyType {
   isClass: boolean;
 
   constructor(value: string, isClass = false) {
-    this.value = value;
+    this.value = value || 'string';
     this.isClass = isClass;
   }
 

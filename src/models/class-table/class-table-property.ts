@@ -107,10 +107,6 @@ export class ClassTableProperty {
   }
 
   public changeType(type: ClassTablePropertyType): void {
-    if (!type || !type.value) {
-      throw Error('Property Type can´t be null.git ');
-    }
-
     this._type = new ClassTablePropertyType(type.value, type.isClass);
   }
 

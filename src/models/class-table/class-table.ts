@@ -1,6 +1,7 @@
 import { ClassTablePosition } from './class-table-position';
 import { ClassTableProperty } from './class-table-property';
 import { Utils } from '../../app/utils';
+import { ClassTablePropertyType } from './class-table-property-type';
 
 export class ClassTable {
   private _key: string;
@@ -38,7 +39,27 @@ export class ClassTable {
     this._key = key || Utils.generateID();
     this._name = Utils.capitalize(name) || '';
     this._tableName = Utils.convertToUnderscore(tableName) || '';
-    this._properties = properties || new Array<ClassTableProperty>();
+    this._properties = properties
+      ? properties.map(
+          property =>
+            new ClassTableProperty(
+              null,
+              property.name,
+              property.columnName,
+              property.description,
+              property.type
+                ? new ClassTablePropertyType(
+                    property.type.value,
+                    property.type.isClass
+                  )
+                : new ClassTablePropertyType(''),
+              property.isForeignKey,
+              property.isPrimaryKey,
+              property.isRequired,
+              property.hasChangeMethod
+            )
+        )
+      : new Array<ClassTableProperty>();
     this._position = position || new ClassTablePosition(0, 0);
   }
 

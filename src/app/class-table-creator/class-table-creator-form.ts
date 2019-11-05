@@ -68,7 +68,9 @@ export class ClassTableCreatorForm {
 
     select.on('change', function() {
       if (inputForm.onValueChange) {
-        inputForm.onValueChange(this.value, this);
+        inputForm.onValueChange(this.value, this.options[
+          this.selectedIndex
+        ] as any);
       }
     });
 

@@ -431,18 +431,32 @@ export class ClassTableCreator {
       initialValue: property.type.value,
       label: 'Type',
       options: selectOptions => {
-        var availableType = CSharpTypes.concat(
-          this.otherClassTable.map(ct => ct.name)
+        let availableTypes = CSharpTypes.map(
+          val => new ClassTablePropertyType(val, false)
+        );
+        availableTypes = availableTypes.concat(
+          this.otherClassTable.map(
+            ct => new ClassTablePropertyType(ct.name, true)
+          )
         );
 
         selectOptions
-          .data(availableType)
+          .data(availableTypes)
           .enter()
           .append('option')
-          .text(value => value);
+          .attr('isClass', value => {
+            return value.isClass;
+          })
+          .text(type => type.value);
       },
       onValueChange: (value, element) => {
-        formDataChanges.type = new ClassTablePropertyType(value, false);
+        const isClass = Utils.convertToBoolean(
+          d3.select(element).attr('isClass')
+        );
+        formDataChanges.type = new ClassTablePropertyType(
+          value,
+          isClass ? true : false
+        );
       }
     });
 

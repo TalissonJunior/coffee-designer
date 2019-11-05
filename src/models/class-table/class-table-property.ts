@@ -1,5 +1,5 @@
-import { ClassTablePropertyType } from './class-table-property-type';
 import { Utils } from '../../app/utils';
+import { ClassTableForeignKey } from './class-table-foreign-key';
 
 export class ClassTableProperty {
   private _key: string;
@@ -22,8 +22,8 @@ export class ClassTableProperty {
     return this._description;
   }
 
-  private _type: ClassTablePropertyType;
-  public get type(): ClassTablePropertyType {
+  private _type: string;
+  public get type(): string {
     return this._type;
   }
 
@@ -47,16 +47,22 @@ export class ClassTableProperty {
     return this._hasChangeMethod;
   }
 
+  private _foreign: ClassTableForeignKey;
+  public get foreign(): ClassTableForeignKey {
+    return this._foreign;
+  }
+
   constructor(
     key: string,
     name: string,
     columnName: string,
     description: string,
-    type: ClassTablePropertyType,
+    type: string,
     isForeignKey: boolean,
     isPrimaryKey: boolean,
     isRequired: boolean,
-    hasChangeMethod: boolean
+    hasChangeMethod: boolean,
+    foreign: ClassTableForeignKey
   ) {
     this._key = key || Utils.generateID();
     this._name = Utils.capitalize(name) || '';
@@ -66,9 +72,14 @@ export class ClassTableProperty {
     this._isPrimaryKey = isPrimaryKey;
     this._isRequired = isRequired;
     this._hasChangeMethod = hasChangeMethod;
-    this._type = type
-      ? new ClassTablePropertyType(type.value, type.isClass)
-      : new ClassTablePropertyType('String');
+    this._type = type;
+    this._foreign = foreign
+      ? new ClassTableForeignKey(
+          foreign.table,
+          foreign.tableColumn,
+          foreign.classProperty
+        )
+      : new ClassTableForeignKey(null, null, null);
   }
 
   public changeName(name: string): void {
@@ -91,8 +102,19 @@ export class ClassTableProperty {
     this._description = description;
   }
 
-  public setIsForeignKey(isForeignKey: boolean): void {
+  public setIsForeignKey(
+    isForeignKey: boolean,
+    foreign: ClassTableForeignKey
+  ): void {
     this._isForeignKey = isForeignKey;
+
+    if (!this.isForeignKey) {
+      this._foreign.reset();
+    } else {
+      this._foreign.changeTable(foreign.table);
+      this._foreign.changeTableColumn(foreign.tableColumn);
+      this._foreign.changeClassProperty(foreign.classProperty);
+    }
   }
 
   public setIsPrimaryKey(isPrimaryKey: boolean): void {
@@ -107,10 +129,8 @@ export class ClassTableProperty {
     this._hasChangeMethod = hasChangeMethod;
   }
 
-  public changeType(type: ClassTablePropertyType): void {
-    this._type = new ClassTablePropertyType(type.value, type.isClass);
-
-    this._isForeignKey = type.isClass;
+  public changeType(type: string): void {
+    this._type = type;
   }
 
   toJson() {
@@ -119,11 +139,12 @@ export class ClassTableProperty {
       name: this._name,
       columnName: this._columnName,
       description: this._description,
-      type: this._type.toJson(),
+      type: this._type,
       isForeignKey: this._isForeignKey,
       isPrimaryKey: this._isPrimaryKey,
       isRequired: this._isRequired,
-      hasChangeMethod: this._hasChangeMethod
+      hasChangeMethod: this._hasChangeMethod,
+      foreign: this._foreign.toJson()
     };
   }
 }

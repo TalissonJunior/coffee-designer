@@ -40,10 +40,7 @@ Example
                             name: "id",
                             columnName: "id",
                             description: "",
-                            type: {
-                                value: "Guid",
-                                isClass: false
-                            },
+                            type: "Guid",
                             isForeignKey: false,
                             isPrimaryKey: true,
                             isRequired: true,
@@ -53,14 +50,26 @@ Example
                             name: "Name",
                             columnName: "Name",
                             description: "",
-                            type: {
-                                value: "string",
-                                isClass: false
-                            },
+                            type: "string",
                             isForeignKey: false,
                             isPrimaryKey: false,
                             isRequired: true,
                             hasChangeMethod: true
+                        },
+                         {
+                            name: "FkAddressId",
+                            columnName: "fk_address_id",
+                            description: "",
+                            type: 'Guid',
+                            isForeignKey: true,
+                            isPrimaryKey: false,
+                            isRequired: true,
+                            hasChangeMethod: true,
+                            foreign: {
+                                table: 'Address',
+                                tableColumn: 'id',
+                                classProperty: 'Address'
+                            }
                         }
                     ],
                     position: {
@@ -76,10 +85,7 @@ Example
                             name: "Id",
                             columnName: "id",
                             description: "",
-                            type: {
-                                value: "Guid",
-                                isClass: false
-                            },
+                            type: "Guid",
                             isForeignKey: false,
                             isPrimaryKey: false,
                             isRequired: true,

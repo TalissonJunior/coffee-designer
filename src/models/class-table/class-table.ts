@@ -47,16 +47,12 @@ export class ClassTable {
               property.name,
               property.columnName,
               property.description,
-              property.type
-                ? new ClassTablePropertyType(
-                    property.type.value,
-                    property.type.isClass
-                  )
-                : new ClassTablePropertyType(''),
+              property.type,
               property.isForeignKey,
               property.isPrimaryKey,
               property.isRequired,
-              property.hasChangeMethod
+              property.hasChangeMethod,
+              property.foreign
             )
         )
       : new Array<ClassTableProperty>();

@@ -9,6 +9,7 @@ import { ClassTablePropertyType } from '../../models/class-table/class-table-pro
 import { Toast } from '../toast';
 import { ClassTablePosition } from '../../models/class-table/class-table-position';
 import { ContextMenu } from '../context-menu/context-menu';
+import { ClassTableForeignKey } from '../../models/class-table/class-table-foreign-key';
 
 /**
  * Creates the class table element,
@@ -279,8 +280,8 @@ export class ClassTableCreator {
             value: property.name
           },
           {
-            label: property.type.value,
-            value: property.type.value
+            label: property.type,
+            value: property.type
           },
           {
             label: property.columnName,
@@ -386,11 +387,12 @@ export class ClassTableCreator {
           null,
           null,
           null,
-          new ClassTablePropertyType('string', false),
+          'string',
           false,
           false,
           true,
-          true
+          true,
+          null
         )
       );
     });
@@ -407,7 +409,15 @@ export class ClassTableCreator {
       columnName: property.columnName,
       isPrimaryKey: property.isPrimaryKey,
       isRequired: property.isRequired,
-      hasChangeMethod: property.hasChangeMethod
+      hasChangeMethod: property.hasChangeMethod,
+      isForeignKey: property.isForeignKey,
+      foreignTable: property.foreign ? property.foreign.table : null,
+      foreignTableColumn: property.foreign
+        ? property.foreign.tableColumn
+        : null,
+      foreignClassProperty: property.foreign
+        ? property.foreign.classProperty
+        : null
     };
 
     parentTr.attr('class', 'editing');
@@ -428,36 +438,17 @@ export class ClassTableCreator {
 
     new ClassTableCreatorForm().createSelectInput({
       form: form,
-      initialValue: property.type.value,
+      initialValue: property.type,
       label: 'Type',
       options: selectOptions => {
-        let availableTypes = CSharpTypes.map(
-          val => new ClassTablePropertyType(val, false)
-        );
-        availableTypes = availableTypes.concat(
-          this.otherClassTable.map(
-            ct => new ClassTablePropertyType(ct.name, true)
-          )
-        );
-
         selectOptions
-          .data(availableTypes)
+          .data(CSharpTypes)
           .enter()
           .append('option')
-          .attr('isClass', value => {
-            return value.isClass;
-          })
-          .text(type => type.value);
+          .text(value => value);
       },
       onValueChange: (value, element) => {
-        const isClass = Utils.convertToBoolean(
-          d3.select(element).attr('isClass')
-        );
-
-        formDataChanges.type = new ClassTablePropertyType(
-          value,
-          isClass ? true : false
-        );
+        formDataChanges.type = value;
       }
     });
 
@@ -496,6 +487,139 @@ export class ClassTableCreator {
         formDataChanges.hasChangeMethod = value;
       }
     });
+
+    const createForeignClassPropertyFormAfter = (afterForm, key) => {
+      // Create table column select
+      return new ClassTableCreatorForm().createInputAfter({
+        key: key + 'foreignKey',
+        after: afterForm,
+        initialValue: property.foreign ? property.foreign.classProperty : null,
+        label: 'Class Property Name',
+        onValueChange: (classPropertyValue, element) => {
+          formDataChanges.foreignClassProperty = classPropertyValue;
+        }
+      });
+    };
+
+    const createForeignTableColumnFormAfter = (
+      afterForm,
+      key,
+      classTable: ClassTable,
+      foreign: ClassTableForeignKey
+    ) => {
+      let classPropertyElement;
+      // Create table column select
+      const form = new ClassTableCreatorForm().createSelectInputAfter({
+        key: key + 'foreignKey',
+        after: afterForm,
+        initialValue: property.foreign ? property.foreign.tableColumn : null,
+        label: 'Table Column Reference',
+        options: selectOptions => {
+          selectOptions
+            .data(classTable.properties.map(ct => ct.columnName))
+            .enter()
+            .append('option')
+            .text(value => value);
+        },
+        onValueChange: (tableColumnValue, element) => {
+          formDataChanges.foreignTableColumn = tableColumnValue;
+
+          if (classPropertyElement) {
+            classPropertyElement.remove();
+          }
+
+          if (tableColumnValue) {
+            classPropertyElement = createForeignClassPropertyFormAfter(
+              form,
+              key
+            );
+          }
+        }
+      });
+
+      if (foreign) {
+        classPropertyElement = createForeignClassPropertyFormAfter(form, key);
+      }
+
+      return form;
+    };
+
+    const createTableForeignFormAfter = (
+      afterForm,
+      key,
+      foreign: ClassTableForeignKey
+    ) => {
+      let tableColumnRefenceElement;
+
+      const tableForm = new ClassTableCreatorForm().createSelectInputAfter({
+        key: key + 'foreignKey',
+        after: afterForm,
+        initialValue: property.foreign ? property.foreign.table : null,
+        label: 'Table Reference',
+        options: selectOptions => {
+          selectOptions
+            .data(this.otherClassTable.map(ct => ct.name))
+            .enter()
+            .append('option')
+            .text(value => value);
+        },
+        onValueChange: (tableNameValue, element) => {
+          formDataChanges.foreignTable = tableNameValue;
+          if (tableColumnRefenceElement) {
+            tableColumnRefenceElement.remove();
+          }
+
+          if (tableNameValue) {
+            const classTable = this.otherClassTable.find(
+              ct => ct.name == tableNameValue
+            );
+
+            tableColumnRefenceElement = createForeignTableColumnFormAfter(
+              tableForm,
+              key,
+              classTable,
+              null
+            );
+          }
+        }
+      });
+
+      if (foreign) {
+        const classTable = this.otherClassTable.find(
+          ct => ct.name == foreign.table
+        );
+
+        tableColumnRefenceElement = createForeignTableColumnFormAfter(
+          tableForm,
+          key,
+          classTable,
+          foreign
+        );
+      }
+    };
+
+    const foreignKeyElement = new ClassTableCreatorForm().createCheckboxInput({
+      form: form,
+      initialValueChecked: property.isForeignKey,
+      label: 'Is Foreign Key',
+      onValueChange: (value, element) => {
+        if (value) {
+          createTableForeignFormAfter(foreignKeyElement, property.key, null);
+        } else {
+          d3.selectAll(`[key="${property.key}foreignKey"]`).remove();
+        }
+
+        formDataChanges.isForeignKey = value;
+      }
+    });
+
+    if (property.isForeignKey) {
+      createTableForeignFormAfter(
+        foreignKeyElement,
+        property.key,
+        property.isForeignKey ? property.foreign : null
+      );
+    }
 
     new ClassTableCreatorForm().createCancelSaveButton({
       form: form,
@@ -539,6 +663,15 @@ export class ClassTableCreator {
           );
           this.classTable.properties[propertyIndex].setHasChangeMethod(
             formDataChanges.hasChangeMethod
+          );
+
+          this.classTable.properties[propertyIndex].setIsForeignKey(
+            formDataChanges.isForeignKey,
+            new ClassTableForeignKey(
+              formDataChanges.foreignTable,
+              formDataChanges.foreignTableColumn,
+              formDataChanges.foreignClassProperty
+            )
           );
 
           // Close form

@@ -453,6 +453,7 @@ export class ClassTableCreator {
         const isClass = Utils.convertToBoolean(
           d3.select(element).attr('isClass')
         );
+
         formDataChanges.type = new ClassTablePropertyType(
           value,
           isClass ? true : false

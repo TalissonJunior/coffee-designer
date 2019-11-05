@@ -108,6 +108,8 @@ export class ClassTableProperty {
 
   public changeType(type: ClassTablePropertyType): void {
     this._type = new ClassTablePropertyType(type.value, type.isClass);
+
+    this._isForeignKey = type.isClass;
   }
 
   toJson() {

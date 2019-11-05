@@ -274,6 +274,8 @@ export class ClassTableCreator {
       .data(function(property: ClassTableProperty) {
         d3.select(this).attr('key', property.key);
 
+        // the value is used to do some specific logis,
+        // the label is used to display a value
         return [
           {
             label: property.name,
@@ -285,7 +287,11 @@ export class ClassTableCreator {
           },
           {
             label: property.columnName,
-            value: property.isPrimaryKey ? 'primary' : property.columnName
+            value: property.isPrimaryKey
+              ? 'primary'
+              : property.isForeignKey
+              ? 'foreign'
+              : property.columnName
           },
           {
             label: property.isRequired,
@@ -324,6 +330,15 @@ export class ClassTableCreator {
             <div class="tooltip">
               <img src="assets/key.png">
               <span class="tooltiptext tooltip-top" style="margin-left:-38px;">Primary Key</span>
+            </div>
+           </div>
+          `;
+        } else if (labelValue.value == 'foreign') {
+          return `<div class="table-foreign"> 
+            <span>${labelValue.label}</span>
+            <div class="tooltip">
+              <img src="assets/foreign.png">
+              <span class="tooltiptext tooltip-top" style="margin-left:-38px;">Foreign Key</span>
             </div>
            </div>
           `;
@@ -488,8 +503,8 @@ export class ClassTableCreator {
       }
     });
 
+    // Creates tha foreign key class property input
     const createForeignClassPropertyFormAfter = (afterForm, key) => {
-      // Create table column select
       return new ClassTableCreatorForm().createInputAfter({
         key: key + 'foreignKey',
         after: afterForm,
@@ -501,6 +516,7 @@ export class ClassTableCreator {
       });
     };
 
+    // Creates the foreign table column input
     const createForeignTableColumnFormAfter = (
       afterForm,
       key,
@@ -537,6 +553,8 @@ export class ClassTableCreator {
         }
       });
 
+      // If has initial value then create the form,
+      // used when editing an foreign key
       if (foreign) {
         classPropertyElement = createForeignClassPropertyFormAfter(form, key);
       }
@@ -544,6 +562,7 @@ export class ClassTableCreator {
       return form;
     };
 
+    // Creates the foreign table input
     const createTableForeignFormAfter = (
       afterForm,
       key,
@@ -584,6 +603,8 @@ export class ClassTableCreator {
         }
       });
 
+      // If has initial value then create the form,
+      // used when editing an foreign key
       if (foreign) {
         const classTable = this.otherClassTable.find(
           ct => ct.name == foreign.table

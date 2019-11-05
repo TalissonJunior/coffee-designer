@@ -66,8 +66,9 @@ export class ClassTableProperty {
     this._isPrimaryKey = isPrimaryKey;
     this._isRequired = isRequired;
     this._hasChangeMethod = hasChangeMethod;
-
-    this.changeType(type);
+    this._type = type
+      ? new ClassTablePropertyType(type.value, type.isClass)
+      : new ClassTablePropertyType('String');
   }
 
   public changeName(name: string): void {

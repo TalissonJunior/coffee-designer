@@ -1,0 +1,35 @@
+.toolbar {
+  box-sizing: border-box;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 30;
+  height: $toolbar-height;
+  border-bottom: 1px solid;
+  border-bottom-color: #1a1a1c;
+  background-color: #2e2f34;
+  display: flex;
+
+  .logo {
+    width: 63px;
+    margin-left: 16px;
+    margin-top: 12px;
+    margin-right: -11px;
+
+    img {
+      width: 36px;
+    }
+  }
+
+  .project-description {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    .title {
+      color: #fff;
+      font-size: 24px;
+    }
+  }
+}

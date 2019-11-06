@@ -1,0 +1,48 @@
+.vertical-toolbar {
+  position: absolute;
+  height: calc(100% - #{$toolbar-height});
+  top: $toolbar-height;
+  text-align: center;
+  width: $toolbar-vertical-width;
+  background: #2e2f34 none repeat scroll 0 0;
+  text-decoration: none;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-right: 1px solid;
+  border-color: #1a1a1c;
+  z-index: 30;
+
+  li {
+    display: block;
+    font-size: 10px;
+    padding: 1.75em 0;
+    position: relative;
+    border-top: 1px solid transparent;
+    border-bottom: 1px solid transparent;
+    cursor: pointer;
+
+    &:hover {
+      background: #3c3c44 none repeat scroll 0 0;
+      border-color: #1a1a1c;
+      color: #fff;
+    }
+
+    &.active {
+      background: #3c3c44 none repeat scroll 0 0;
+      border-color: #1a1a1c;
+      color: #fff;
+    }
+
+    .icon {
+      fill: #ababae;
+      display: block;
+      height: 32px;
+      margin: 4px auto 0;
+      padding: 0;
+      stroke: none;
+      transition: all 0.3s ease 0s;
+      width: 32px;
+    }
+  }
+}

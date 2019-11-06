@@ -1,0 +1,8 @@
+.main-content {
+  position: absolute;
+  height: calc(100% - #{$toolbar-height});
+  width: calc(100% - #{$toolbar-vertical-width});
+  top: $toolbar-height;
+  left: $toolbar-vertical-width;
+  background-color: #44444c;
+}

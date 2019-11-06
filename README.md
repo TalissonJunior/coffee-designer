@@ -25,7 +25,9 @@ Example
 ```html
 <script>
     // Initializing Coffee Designer
-    const coffeeDesigner = CoffeeDesigner.init("body");
+    const coffeeDesigner = CoffeeDesigner.init({
+        projectName: 'My Project'
+    });
 
     // Here we are using a mock json, but you can fetch from an api
     // Just make sure the json comes formatted;

@@ -8,6 +8,7 @@ import { JSONOutput } from '../models/json/json-output';
 import { ClassTable } from '../models/class-table/class-table';
 import { OnChangeType } from '../enums/on-change-type';
 import { ClassTableOnChange } from '../models/class-table/class-table-on-change';
+import { CoffeeOptions } from '../models/coffee-options';
 
 class App {
   height = 2400;
@@ -15,14 +16,17 @@ class App {
   workspace: WorkSpace;
   minimap: Minimap;
 
-  constructor(container: string) {
-    this.init(container);
+  constructor(options: CoffeeOptions) {
+    this.init(options);
   }
 
-  private init(container: string) {
+  private init(options: CoffeeOptions) {
+    const container = 'body';
+
     this.workspace = new WorkSpace(container, {
       height: this.height,
-      width: this.width
+      width: this.width,
+      options: options
     });
 
     this.minimap = new Minimap(container, this.workspace, {
@@ -73,5 +77,4 @@ class App {
   }
 }
 
-export const init = (containerReference?: string) =>
-  new App(containerReference);
+export const init = (options: CoffeeOptions) => new App(options);

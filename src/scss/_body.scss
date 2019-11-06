@@ -5,6 +5,6 @@ html {
   z-index: 1;
   height: 100%;
   overflow: hidden;
-  background-color: $body-color;
-  background-image: url('assets/bg.png');
+  background: $body-color none repeat scroll 0 0;
+  color: #b2b2ba;
 }

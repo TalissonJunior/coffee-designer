@@ -9,6 +9,7 @@ import { ClassTableOnChange } from '../../models/class-table/class-table-on-chan
 import { OnChangeType } from '../../enums/on-change-type';
 import { Utils } from '../utils';
 import { Minimap } from '../minimap/minimap';
+import { CoffeeOptions } from '../../models/coffee-options';
 
 /**
  * This class is responsible for creating the entire external environment
@@ -30,8 +31,15 @@ export class WorkSpace {
     this.creators = new Array<ClassTableCreator>();
     this.callbackChanges = new Array<ClassTableOnChange>();
 
+    this.createToolbar(container, options.options);
+    this.createVerticalToolbar(container);
+
     this.svg = d3
       .select(container)
+      .append('div')
+      .attrs({
+        class: 'main-content'
+      })
       .append('svg')
       .attrs({
         class: 'workspace',
@@ -51,6 +59,65 @@ export class WorkSpace {
             }
           }
         ]);
+      });
+  }
+
+  createToolbar(container: string, options: CoffeeOptions) {
+    const toolbarElement = d3
+      .select(container)
+      .append('div')
+      .attrs({
+        class: 'toolbar'
+      });
+
+    toolbarElement
+      .append('div')
+      .attrs({
+        class: 'logo'
+      })
+      .append('img')
+      .attrs({
+        src: 'assets/logo.png'
+      });
+
+    const projectDescriptionElement = toolbarElement.append('div').attrs({
+      class: 'project-description'
+    });
+
+    projectDescriptionElement
+      .append('div')
+      .attrs({
+        class: 'title'
+      })
+      .text(options != null ? options.projectName : 'New Project');
+
+    projectDescriptionElement
+      .append('div')
+      .attrs({
+        class: 'description'
+      })
+      .text('Coffee Designer Creator');
+  }
+
+  createVerticalToolbar(container: string) {
+    const toolbarVerticalElement = d3
+      .select(container)
+      .append('ul')
+      .attrs({
+        class: 'vertical-toolbar'
+      });
+
+    toolbarVerticalElement
+      .append('li')
+      .append('svg')
+      .attrs({
+        class: 'icon',
+        viewBox: '0 0 32 32'
+      })
+      .append('path')
+      .attrs({
+        d:
+          'M30 8h-3v-3c0-1.105-0.895-2-2-2v0h-22c-1.105 0-2 0.895-2 2v0 16c0 1.105 0.895 2 2 2v0h3v3c0 1.105 0.895 2 2 2v0h22c1.105 0 2-0.895 2-2v0-16c0-1.105-0.895-2-2-2v0zM6 10v11h-3v-16h22v3h-17c-1.105 0-2 0.895-2 2v0zM18 18h-10v-6h10zM8 20h10v6h-10zM30 26h-10v-6h10zM30 18h-10v-6h10z'
       });
   }
 

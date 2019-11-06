@@ -80,7 +80,11 @@ export class WorkSpace {
         src: 'assets/logo.png'
       });
 
-    const projectDescriptionElement = toolbarElement.append('div').attrs({
+    const items = toolbarElement.append('div').attrs({
+      class: 'items'
+    });
+
+    const projectDescriptionElement = items.append('div').attrs({
       class: 'project-description'
     });
 
@@ -97,6 +101,22 @@ export class WorkSpace {
         class: 'description'
       })
       .text('Coffee Designer Creator');
+
+    // Buttons
+    items
+      .append('div')
+      .attrs({
+        class: 'buttons'
+      })
+      .append('button')
+      .attrs({
+        class: 'close'
+      })
+      .on('click', () => {
+        if (options.onClose) {
+          options.onClose();
+        }
+      });
   }
 
   createVerticalToolbar(container: string) {

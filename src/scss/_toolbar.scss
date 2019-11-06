@@ -22,14 +22,54 @@
     }
   }
 
-  .project-description {
+  .items {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    justify-content: space-between;
 
-    .title {
-      color: #fff;
-      font-size: 24px;
+    .project-description {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+
+      .title {
+        color: #fff;
+        font-size: 24px;
+      }
+    }
+
+    .close {
+      background-color: transparent;
+      border: transparent;
+      position: absolute;
+      right: 8px;
+      top: 15px;
+      width: 55px;
+      height: 38px;
+      opacity: 0.3;
+      cursor: pointer;
+
+      &:hover {
+        opacity: 1;
+      }
+
+      &:before,
+      &:after {
+        position: absolute;
+        left: 25px;
+        top: 7px;
+        content: ' ';
+        height: 25px;
+        width: 2px;
+        background-color: #b2b2ba;
+      }
+
+      &:before {
+        transform: rotate(45deg);
+      }
+
+      &:after {
+        transform: rotate(-45deg);
+      }
     }
   }
 }

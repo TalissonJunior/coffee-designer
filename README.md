@@ -26,7 +26,10 @@ Example
 <script>
     // Initializing Coffee Designer
     const coffeeDesigner = CoffeeDesigner.init({
-        projectName: 'My Project'
+        projectName: 'My Project',
+        onClose: () => {
+            // Do something on close button click
+        }
     });
 
     // Here we are using a mock json, but you can fetch from an api

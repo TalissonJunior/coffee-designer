@@ -532,7 +532,7 @@ export class ClassTableCreator {
         label: 'Table Column Reference',
         options: selectOptions => {
           selectOptions
-            .data(classTable.properties.map(ct => ct.columnName))
+            .data(classTable.properties.map(ct => ct.name))
             .enter()
             .append('option')
             .text(value => value);

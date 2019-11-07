@@ -10,15 +10,16 @@
   border-bottom-color: #1a1a1c;
   background-color: #2e2f34;
   display: flex;
+  box-shadow: black 10px 0px 2px;
 
   .logo {
     width: 63px;
-    margin-left: 16px;
-    margin-top: 12px;
+    margin-left: 12px;
+    margin-top: 8px;
     margin-right: -11px;
 
     img {
-      width: 36px;
+      width: 30px;
     }
   }
 
@@ -42,7 +43,7 @@
       border: transparent;
       position: absolute;
       right: 8px;
-      top: 15px;
+      top: 7px;
       width: 55px;
       height: 38px;
       opacity: 0.3;

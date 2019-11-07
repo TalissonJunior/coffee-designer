@@ -4,7 +4,7 @@
   position: absolute;
   font-family: 'source_sans_proregular', sans-serif;
   font-size: 12px;
-  background-color: #3c3c44;
+  background-color: #333333;
   position: absolute;
   border-top: 1px solid #1a1a1c;
   border-left: 1px solid #1a1a1c;
@@ -17,7 +17,7 @@
   }
 
   .class-table-form {
-    background-color: #44444c;
+    background-color: #333333;
     padding: 15px 8px;
     .class-table-form-group {
       display: flex;
@@ -87,7 +87,7 @@
     &.caption {
       font-weight: bold;
       text-align: left;
-      background-color: #3c3c44;
+      background-color: #333333;
       cursor: move;
       -webkit-touch-callout: none;
       -webkit-user-select: none;
@@ -95,7 +95,7 @@
       -moz-user-select: none;
       -ms-user-select: none;
       user-select: none;
-      color: #ffffff;
+      color: #d2d1d1;
 
       &.open-form {
         .class-table-name {
@@ -177,8 +177,7 @@
   td {
     border-bottom: 1px solid #1a1a1c;
     border-right: 1px solid #1a1a1c;
-
-    background-color: #3c3c44;
+    background-color: #333333;
     padding: 1px;
     padding-left: 3px;
     white-space: nowrap;

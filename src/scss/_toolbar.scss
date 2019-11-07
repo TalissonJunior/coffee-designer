@@ -8,7 +8,7 @@
   height: $toolbar-height;
   border-bottom: 1px solid;
   border-bottom-color: #1a1a1c;
-  background-color: #2e2f34;
+  background-color: #333333;
   display: flex;
   box-shadow: black 10px 0px 2px;
 
@@ -26,6 +26,7 @@
   .items {
     display: flex;
     justify-content: space-between;
+    width: 100%;
 
     .project-description {
       display: flex;

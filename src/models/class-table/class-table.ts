@@ -122,4 +122,19 @@ export class ClassTable {
       position: this._position.toJson()
     };
   }
+
+  selfClone(): ClassTable {
+    const json = this.toJson();
+
+    return new ClassTable(
+      null,
+      json.name,
+      json.tableName,
+      json.properties.map(p => {
+        p.key == null;
+        return p;
+      }) as any,
+      new ClassTablePosition(json.position.x + 50, json.position.y + 50)
+    );
+  }
 }

@@ -84,6 +84,9 @@ export class WorkSpace {
       class: 'items'
     });
 
+    // empty div
+    items.append('div');
+
     const projectDescriptionElement = items.append('div').attrs({
       class: 'project-description'
     });
@@ -93,14 +96,14 @@ export class WorkSpace {
       .attrs({
         class: 'title'
       })
-      .text(options != null ? options.projectName : 'New Project');
+      .text(options.projectName ? options.projectName : 'New Project');
 
     projectDescriptionElement
       .append('div')
       .attrs({
         class: 'description'
       })
-      .text('Coffee Designer Creator');
+      .text('- Coffee Designer');
 
     // Buttons
     items
@@ -129,6 +132,7 @@ export class WorkSpace {
 
     toolbarVerticalElement
       .append('li')
+      .attr('class', 'active')
       .append('svg')
       .attrs({
         class: 'icon',
@@ -152,11 +156,28 @@ export class WorkSpace {
       otherClassTables
     );
 
+    this.addCreatorListeners(creator, classTable);
+
+    creator.onUpdate = () => {
+      this.addCreatorListeners(creator, classTable);
+    };
+
+    this.creators.push(creator);
+    this.updateClassTablesTypes();
+  }
+
+  addCreatorListeners(creator: ClassTableCreator, classTable: ClassTable) {
     // Add remove option
     creator.selfElement.on('contextmenu', d => {
       new ContextMenu([
         {
-          title: `Remove ${classTable.getClassTableName()}`,
+          title: `Clone ${classTable.getClassTableName()}`,
+          action: () => {
+            this.addClassTable(classTable.selfClone());
+          }
+        },
+        {
+          title: `Delete ${classTable.getClassTableName()}`,
           action: () => {
             const index = this.creators.findIndex(
               creat => creat.classTable.key == classTable.key
@@ -221,9 +242,6 @@ export class WorkSpace {
         creator.classTable.toJson() as any
       );
     });
-
-    this.creators.push(creator);
-    this.updateClassTablesTypes();
   }
 
   updateClassTablesTypes(): void {

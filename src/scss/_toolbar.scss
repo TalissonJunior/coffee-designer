@@ -1,3 +1,5 @@
+$logo-width: $toolbar-height / 2.1;
+
 .toolbar {
   box-sizing: border-box;
   position: absolute;
@@ -6,20 +8,18 @@
   right: 0;
   z-index: 30;
   height: $toolbar-height;
-  border-bottom: 1px solid;
-  border-bottom-color: #1a1a1c;
   background-color: #333333;
   display: flex;
-  box-shadow: black 10px 0px 2px;
+  box-shadow: black 8px 0px 2px;
 
   .logo {
-    width: 63px;
+    width: $toolbar-vertical-width;
     margin-left: 12px;
     margin-top: 8px;
     margin-right: -11px;
 
     img {
-      width: 30px;
+      width: $logo-width;
     }
   }
 
@@ -30,12 +30,17 @@
 
     .project-description {
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
+      align-items: center;
       justify-content: center;
 
       .title {
-        color: #fff;
-        font-size: 24px;
+        color: #dcdada;
+      }
+
+      .description {
+        margin-left: 3px;
+        color: #dcdada;
       }
     }
 
@@ -43,10 +48,10 @@
       background-color: transparent;
       border: transparent;
       position: absolute;
-      right: 8px;
-      top: 7px;
-      width: 55px;
-      height: 38px;
+      right: $toolbar-height / 3;
+      top: 0px;
+      width: $toolbar-height;
+      height: $toolbar-height;
       opacity: 0.3;
       cursor: pointer;
 
@@ -57,10 +62,10 @@
       &:before,
       &:after {
         position: absolute;
-        left: 25px;
-        top: 10px;
+        left: $toolbar-height / 2;
+        top: 9px;
         content: ' ';
-        height: 20px;
+        height: 16px;
         width: 2px;
         background-color: #b2b2ba;
       }

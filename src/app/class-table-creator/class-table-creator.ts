@@ -21,6 +21,7 @@ export class ClassTableCreator {
   selfElement: d3.Selection<d3.BaseType, unknown, HTMLElement, any>;
   containerElement: d3.Selection<d3.BaseType, unknown, HTMLElement, any>;
   otherClassTable: Array<ClassTable>;
+  onUpdate: Function;
 
   // Listeners
   private onPropertyChange: Function;
@@ -58,8 +59,10 @@ export class ClassTableCreator {
   }
 
   update(): void {
+    let hasUpdated = false;
     if (this.selfElement) {
-      this.selfElement.remove();
+      (this.selfElement.node() as any).parentNode.remove();
+      hasUpdated = true;
     }
 
     this.selfElement = this.containerElement
@@ -71,13 +74,17 @@ export class ClassTableCreator {
       .append('xhtml:table')
       .attrs({
         class: 'class-table'
-      })
-      .raise();
+      });
 
     this.createHeader(this.selfElement, this.classTable);
     this.createBody(this.selfElement, this.classTable);
     this.createFooter(this.selfElement);
     this.bindDrag(this.selfElement);
+    this.selfElement.raise();
+
+    if (hasUpdated) {
+      this.onUpdate();
+    }
   }
 
   private init(
@@ -233,6 +240,7 @@ export class ClassTableCreator {
             });
           } else {
             headerTR.select('class-table-form').remove();
+            self.update();
           }
         });
 
@@ -321,6 +329,11 @@ export class ClassTableCreator {
             <img  class="sort-property" key="${labelValue.label}" src="assets/sort.png">
             <span class="tooltiptext tooltip-top" style="margin-left:-18px;">Sort</span>
           </div>
+
+          <div class="tooltip">
+            <img  class="delete-property" key="${labelValue.label}" src="assets/delete.png">
+            <span class="tooltiptext tooltip-top" style="margin-left:-18px;">Delete</span>
+          </div>
            
            </div>
           `;
@@ -361,6 +374,27 @@ export class ClassTableCreator {
 
         const property = classTable.properties.find(prop => prop.key == key);
         self.createFormProperty(parentTr, property);
+      });
+
+    tbody
+      .selectAll('.delete-property')
+      .each(function() {
+        return this;
+      })
+      .on('click', function() {
+        const currentEditElement = d3.select(this);
+        const key = currentEditElement.attr('key');
+
+        try {
+          classTable.removeProperty(key);
+
+          if (self.onPropertyChange) {
+            self.onPropertyChange();
+          }
+          self.update();
+        } catch (error) {
+          new Toast().show(error.message);
+        }
       });
   }
 

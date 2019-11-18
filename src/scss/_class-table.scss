@@ -12,6 +12,16 @@
   border-collapse: separate;
   border-spacing: 0;
 
+  .actions-table {
+    .edit-property {
+      cursor: pointer;
+    }
+
+    .delete-property {
+      cursor: pointer;
+    }
+  }
+
   .edit {
     cursor: pointer;
   }

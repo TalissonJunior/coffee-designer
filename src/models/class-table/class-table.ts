@@ -52,7 +52,8 @@ export class ClassTable {
               property.isPrimaryKey,
               property.isRequired,
               property.hasChangeMethod,
-              property.foreign
+              property.foreign,
+              property.enumType
             )
         )
       : new Array<ClassTableProperty>();

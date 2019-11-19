@@ -1,5 +1,6 @@
 import { Utils } from '../../app/utils';
 import { ClassTableForeignKey } from './class-table-foreign-key';
+import { ClassTablePropertyEnumType } from './class-table-property-enum-type';
 
 export class ClassTableProperty {
   private _key: string;
@@ -25,6 +26,11 @@ export class ClassTableProperty {
   private _type: string;
   public get type(): string {
     return this._type;
+  }
+
+  private _enumType: ClassTablePropertyEnumType;
+  public get enumType(): ClassTablePropertyEnumType {
+    return this._enumType;
   }
 
   private _isForeignKey: boolean;
@@ -62,7 +68,8 @@ export class ClassTableProperty {
     isPrimaryKey: boolean,
     isRequired: boolean,
     hasChangeMethod: boolean,
-    foreign: ClassTableForeignKey
+    foreign: ClassTableForeignKey,
+    enumType: ClassTablePropertyEnumType
   ) {
     this._key = key || Utils.generateID();
     this._name = Utils.capitalize(name) || '';
@@ -80,6 +87,9 @@ export class ClassTableProperty {
           foreign.classProperty
         )
       : new ClassTableForeignKey(null, null, null);
+    this._enumType = enumType
+      ? new ClassTablePropertyEnumType(enumType.value, enumType.type)
+      : new ClassTablePropertyEnumType(null, null);
   }
 
   public changeName(name: string): void {
@@ -129,8 +139,16 @@ export class ClassTableProperty {
     this._hasChangeMethod = hasChangeMethod;
   }
 
-  public changeType(type: string): void {
+  public changeType(type: string, enumValue: string = null): void {
+    if (enumValue && enumValue.indexOf(',') < 0) {
+      throw Error("Enum value must be separated by ','");
+    }
+
     this._type = type;
+
+    if (enumValue) {
+      this._enumType = new ClassTablePropertyEnumType(enumValue, null);
+    }
   }
 
   toJson() {
@@ -144,7 +162,8 @@ export class ClassTableProperty {
       isPrimaryKey: this._isPrimaryKey,
       isRequired: this._isRequired,
       hasChangeMethod: this._hasChangeMethod,
-      foreign: this._foreign.toJson()
+      foreign: this._foreign.toJson(),
+      enumType: this._enumType.toJson()
     };
   }
 }

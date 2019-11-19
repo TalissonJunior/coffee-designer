@@ -441,6 +441,7 @@ export class ClassTableCreator {
           false,
           true,
           true,
+          null,
           null
         )
       );
@@ -452,7 +453,7 @@ export class ClassTableCreator {
     property: ClassTableProperty
   ): void {
     // Holds property values on change
-    var formDataChanges = {
+    const formDataChanges = {
       name: property.name,
       type: property.type,
       columnName: property.columnName,
@@ -461,12 +462,18 @@ export class ClassTableCreator {
       hasChangeMethod: property.hasChangeMethod,
       isForeignKey: property.isForeignKey,
       foreignTable: property.foreign ? property.foreign.table : null,
+      enumValue: property.enumType ? property.enumType.value : null,
       foreignTableColumn: property.foreign
         ? property.foreign.tableColumn
         : null,
       foreignClassProperty: property.foreign
         ? property.foreign.classProperty
         : null
+    };
+
+    const elementReferences = {
+      isForeignKeyCheckBox: null,
+      hasMethodCheckBox: null
     };
 
     parentTr.attr('class', 'editing');
@@ -485,7 +492,9 @@ export class ClassTableCreator {
       }
     });
 
-    new ClassTableCreatorForm().createSelectInput({
+    let enumTypeElementRef;
+
+    const typeElementForm = new ClassTableCreatorForm().createSelectInput({
       form: form,
       initialValue: property.type,
       label: 'Type',
@@ -498,8 +507,55 @@ export class ClassTableCreator {
       },
       onValueChange: (value, element) => {
         formDataChanges.type = value;
+
+        if (value == 'enum') {
+          enumTypeElementRef = new ClassTableCreatorForm().createInputAfter({
+            key: property.key + 'enumType',
+            after: typeElementForm,
+            initialValue: property.enumType ? property.enumType.value : null,
+            label: 'Enum Value',
+            onValueChange: (enumValue, element) => {
+              formDataChanges.enumValue = enumValue;
+            }
+          });
+
+          // Disables is Foreign key input
+          if (elementReferences.isForeignKeyCheckBox) {
+            elementReferences.isForeignKeyCheckBox.select('input').attrs({
+              disabled: true,
+              checked: null
+            });
+
+            formDataChanges.isForeignKey = false;
+          }
+        } else {
+          // Enables is foreign key input
+          if (elementReferences.isForeignKeyCheckBox) {
+            elementReferences.isForeignKeyCheckBox.select('input').attrs({
+              disabled: null
+            });
+          }
+
+          // Removes enum type value
+          if (enumTypeElementRef) {
+            enumTypeElementRef.node().parentNode.remove();
+          }
+          formDataChanges.enumValue = null;
+        }
       }
     });
+
+    if (formDataChanges.enumValue) {
+      enumTypeElementRef = new ClassTableCreatorForm().createInputAfter({
+        key: property.key + 'enumType',
+        after: typeElementForm,
+        initialValue: formDataChanges.enumValue,
+        label: 'Enum Value',
+        onValueChange: (enumValue, element) => {
+          formDataChanges.enumValue = enumValue;
+        }
+      });
+    }
 
     new ClassTableCreatorForm().createInput({
       form: form,
@@ -528,14 +584,16 @@ export class ClassTableCreator {
       }
     });
 
-    new ClassTableCreatorForm().createCheckboxInput({
-      form: form,
-      initialValueChecked: property.hasChangeMethod,
-      label: 'Has method',
-      onValueChange: (value, element) => {
-        formDataChanges.hasChangeMethod = value;
+    elementReferences.hasMethodCheckBox = new ClassTableCreatorForm().createCheckboxInput(
+      {
+        form: form,
+        initialValueChecked: property.hasChangeMethod,
+        label: 'Has method',
+        onValueChange: (value, element) => {
+          formDataChanges.hasChangeMethod = value;
+        }
       }
-    });
+    );
 
     // Creates tha foreign key class property input
     const createForeignClassPropertyFormAfter = (afterForm, key) => {
@@ -660,13 +718,44 @@ export class ClassTableCreator {
       onValueChange: (value, element) => {
         if (value) {
           createTableForeignFormAfter(foreignKeyElement, property.key, null);
+
+          // Disables has method input
+          if (elementReferences.hasMethodCheckBox) {
+            elementReferences.hasMethodCheckBox.select('input').attrs({
+              disabled: true,
+              checked: null
+            });
+
+            formDataChanges.hasChangeMethod = false;
+          }
         } else {
           d3.selectAll(`[key="${property.key}foreignKey"]`).remove();
+
+          // Enables has method input
+          if (elementReferences.hasMethodCheckBox) {
+            elementReferences.hasMethodCheckBox.select('input').attrs({
+              disabled: null
+            });
+          }
         }
 
         formDataChanges.isForeignKey = value;
       }
     });
+
+    elementReferences.isForeignKeyCheckBox = foreignKeyElement;
+
+    if (property.type == 'enum') {
+      // Disables is Foreign key input
+      if (elementReferences.isForeignKeyCheckBox) {
+        elementReferences.isForeignKeyCheckBox.select('input').attrs({
+          disabled: true,
+          checked: null
+        });
+
+        formDataChanges.isForeignKey = false;
+      }
+    }
 
     if (property.isForeignKey) {
       createTableForeignFormAfter(
@@ -674,6 +763,16 @@ export class ClassTableCreator {
         property.key,
         property.isForeignKey ? property.foreign : null
       );
+
+      // Disables has method input
+      if (elementReferences.hasMethodCheckBox) {
+        elementReferences.hasMethodCheckBox.select('input').attrs({
+          disabled: true,
+          checked: null
+        });
+
+        formDataChanges.hasChangeMethod = false;
+      }
     }
 
     new ClassTableCreatorForm().createCancelSaveButton({
@@ -708,7 +807,8 @@ export class ClassTableCreator {
             formDataChanges.columnName
           );
           this.classTable.properties[propertyIndex].changeType(
-            formDataChanges.type
+            formDataChanges.type,
+            formDataChanges.enumValue
           );
           this.classTable.properties[propertyIndex].setIsPrimaryKey(
             formDataChanges.isPrimaryKey

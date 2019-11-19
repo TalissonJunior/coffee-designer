@@ -8,6 +8,7 @@ export const CSharpTypes = [
   'sbyte',
   'byte[]',
   'char',
+  'enum',
   'float',
   'Guid',
   'DateTime'
